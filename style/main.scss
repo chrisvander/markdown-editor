@@ -1,0 +1,17 @@
+@import "theme.scss";
+
+body {
+  background-color: $background-color;
+  color: $text-color;
+  font-family: $body-font;
+  margin: 0;
+  padding: none;
+  #electron-titlebar .title {
+    color: black;
+    -webkit-app-region: drag;
+    height: 70px;
+    text-align: center;
+    line-height: 40px;
+    vertical-align: middle;
+  }
+}
