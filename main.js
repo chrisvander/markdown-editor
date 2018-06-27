@@ -2,12 +2,22 @@ import {enableLiveReload} from 'electron-compile';
 
 enableLiveReload();
 
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, Menu} = require('electron')
 
 let win
 app.on('ready', () => {
   // Create the browser window.
-  win = new BrowserWindow({width: 800, height: 600, frame: false})
+  win = new BrowserWindow({
+    width: 800,
+    height: 600,
+    frame: false,
+    titleBarStyle: 'hiddenInset',
+    show:false
+  })
+
+  win.once('ready-to-show', () => {
+    win.show()
+  })
 
   // and load the index.html of the app.
   win.loadFile('index.html')
@@ -19,6 +29,7 @@ app.on('ready', () => {
     // when you should delete the corresponding element.
     win = null
   })
+  setMainMenu();
 });
 
 // This method will be called when Electron has finished
@@ -42,47 +53,179 @@ app.on('activate', () => {
   }
 })
 
-if (process.platform === 'darwin') {
-  var template = [{
-    label: 'FromScratch',
-    submenu: [{
-      label: 'Quit',
-      accelerator: 'CmdOrCtrl+Q',
-      click: function() {
-        app.quit();
-      }
-    }]
-  }, {
-    label: 'Edit',
-    submenu: [{
-      label: 'Undo',
-      accelerator: 'CmdOrCtrl+Z',
-      selector: 'undo:'
-    }, {
-      label: 'Redo',
-      accelerator: 'Shift+CmdOrCtrl+Z',
-      selector: 'redo:'
-    }, {
-      type: 'separator'
-    }, {
-      label: 'Cut',
-      accelerator: 'CmdOrCtrl+X',
-      selector: 'cut:'
-    }, {
-      label: 'Copy',
-      accelerator: 'CmdOrCtrl+C',
-      selector: 'copy:'
-    }, {
-      label: 'Paste',
-      accelerator: 'CmdOrCtrl+V',
-      selector: 'paste:'
-    }, {
-      label: 'Select All',
-      accelerator: 'CmdOrCtrl+A',
-      selector: 'selectAll:'
-    }]
-  }];
+function setMainMenu() {
+  const template = [
+    {
+      label: 'Edit',
+      submenu: [
+        {
+          role: 'undo'
+        },
+        {
+          role: 'redo'
+        },
+        {
+          type: 'separator'
+        },
+        {
+          role: 'cut'
+        },
+        {
+          role: 'copy'
+        },
+        {
+          role: 'paste'
+        },
+        {
+          role: 'pasteandmatchstyle'
+        },
+        {
+          role: 'delete'
+        },
+        {
+          role: 'selectall'
+        }
+      ]
+    },
+    {
+      label: 'View',
+      submenu: [
+        {
+          role: 'togglefullscreen'
+        },
+        {
+          label: 'Developer',
+          submenu: [
+            {
+              role: 'reload'
+            },
+            {
+              role: 'forcereload'
+            },
+            {
+              role: 'toggledevtools'
+            },
+          ]
+        },
+      ]
+    },
+    {
+      role: 'window',
+      submenu: [
+        {
+          role: 'minimize'
+        },
+        {
+          role: 'close'
+        }
+      ]
+    },
+    {
+      role: 'help',
+      submenu: [
+        {
+          label: 'Learn More',
+          click () {
+            shell.openExternal('https://electron.atom.io')
+          }
+        },
+        {
+          label: 'Documentation',
+          click () {
+            shell.openExternal(
+              `https://github.com/electron/electron/tree/v${process.versions.electron}/docs#readme`
+            )
+          }
+        },
+        {
+          label: 'Community Discussions',
+          click () {
+            shell.openExternal('https://discuss.atom.io/c/electron')
+          }
+        },
+        {
+          label: 'Search Issues',
+          click () {
+            shell.openExternal('https://github.com/electron/electron/issues')
+          }
+        }
+      ]
+    }
+  ]
 
-  var osxMenu = menu.buildFromTemplate(template);
-  menu.setApplicationMenu(osxMenu);
+  if (process.platform === 'darwin') {
+    template.unshift({
+      label: 'Electron',
+      submenu: [
+        {
+          role: 'about'
+        },
+        {
+          type: 'separator'
+        },
+        {
+          role: 'services',
+          submenu: []
+        },
+        {
+          type: 'separator'
+        },
+        {
+          role: 'hide'
+        },
+        {
+          role: 'hideothers'
+        },
+        {
+          role: 'unhide'
+        },
+        {
+          type: 'separator'
+        },
+        {
+          role: 'quit'
+        }
+      ]
+    })
+    template[1].submenu.push(
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Speech',
+        submenu: [
+          {
+            role: 'startspeaking'
+          },
+          {
+            role: 'stopspeaking'
+          }
+        ]
+      }
+    )
+    template[3].submenu = [
+      {
+        role: 'close'
+      },
+      {
+        role: 'minimize'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        role: 'front'
+      }
+    ]
+  } else {
+    template.unshift({
+      label: 'File',
+      submenu: [
+        {
+          role: 'quit'
+        }
+      ]
+    })
+  }
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }

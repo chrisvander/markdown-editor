@@ -6,7 +6,7 @@
   "scripts": {
     "start": "electron ."
   },
-  "author": "",
+  "author": "Chris Vanderloo",
   "license": "ISC",
   "devDependencies": {
     "connect": "^3.6.6",

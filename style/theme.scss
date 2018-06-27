@@ -3,9 +3,16 @@
 */
 
 // COLORS
-$header-color: #EEE;
-$text-color: #EEE;
-$background-color: #BBB;
+$text-color: #50514F;
+$background-color: #FAF3DD;
+
+// HEADER (blend options)
+$header-color: $background-color;
+$header-text-color: $text-color;
+
+// HEADER
+// $header-color: #EEE;
+// $header-text-color: black;
 
 // FONTS
 $header-font: 'Arial';
