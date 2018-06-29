@@ -12,14 +12,15 @@
   </div>
   <div class="body">
     <div class="editor-container">
-      <div id="editor" contenteditable>
-        Write here
-      </div>
+      <div id="editor" contenteditable>Write here</div>
     </div>
   </div>
   <div class="footer">
-    <button onclick="saveFile(document.getElementById('editor').innerHTML)">
+    <button onclick="saveFile()">
       Save
+    </button>
+    <button onclick="openFile()">
+      Open
     </button>
   </div>
 </body>

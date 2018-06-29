@@ -6,7 +6,7 @@ body {
   font-family: $body-font;
   margin: 0;
   padding: none;
-  #electron-titlebar .title {
+  #electron-titlebar #title {
     color: $header-text-color;
     -webkit-app-region: drag;
     height: 70px;
@@ -44,6 +44,7 @@ body {
       max-width: 800px;
       text-align: left;
       display: inline-block;
+      white-space: pre;
     }
   }
   .footer {
@@ -59,6 +60,7 @@ body {
       color: $text-color;
       height: 20px;
       margin: 10px;
+      margin-right: 0px;
     }
   }
 }
