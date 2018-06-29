@@ -1,18 +1,26 @@
 <html>
 <head>
-  <title>Markdown Editor</title>
+  <title>untitled</title>
   <link rel="stylesheet" href="style/main.scss">
   <script src="index.js"></script>
 </head>
 <body>
   <div id="electron-titlebar" class="drag inset">
-    <div class="title">
-      Title
+    <div id="title">
+      untitled
     </div>
   </div>
   <div class="body">
-    <div id="editor" contenteditable>Write here</div>
-    <div class="footer"></div>
+    <div class="editor-container">
+      <div id="editor" contenteditable>
+        Write here
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <button onclick="saveFile(document.getElementById('editor').innerHTML)">
+      Save
+    </button>
   </div>
 </body>
 </html>

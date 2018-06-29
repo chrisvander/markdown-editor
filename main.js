@@ -7,13 +7,25 @@ const {app, BrowserWindow, Menu} = require('electron')
 let win
 app.on('ready', () => {
   // Create the browser window.
-  win = new BrowserWindow({
-    width: 800,
-    height: 600,
-    frame: false,
-    titleBarStyle: 'hiddenInset',
-    show:false
-  })
+  if (process.platform === 'darwin') {
+    win = new BrowserWindow({
+      width: 800,
+      height: 600,
+      frame: 'false',
+      titleBarStyle: 'hiddenInset',
+      show: false
+    })
+  }
+  else {
+    win = new BrowserWindow({
+      width: 800,
+      height: 600,
+
+      frame: 'false',
+      titleBarStyle: 'hiddenInset',
+      show: false
+    })
+  }
 
   win.once('ready-to-show', () => {
     win.show()
