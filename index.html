@@ -1,27 +1,27 @@
 <html>
-<head>
-  <title>untitled</title>
-  <link rel="stylesheet" href="style/main.scss">
-  <script src="index.js"></script>
-</head>
-<body>
-  <div id="electron-titlebar" class="drag inset">
-    <div id="title">
-      untitled
+  <head>
+    <title>untitled</title>
+    <link rel="stylesheet" href="style/main.scss">
+    <script src="index.js"></script>
+  </head>
+  <body>
+    <div id="electron-titlebar" class="drag inset">
+      <div id="title">
+        Untitled
+      </div>
     </div>
-  </div>
-  <div class="body">
-    <div class="editor-container">
-      <div id="editor" contenteditable>Write here</div>
+    <div class="body">
+      <div class="editor-container">
+        <div id="editor" onload="initEditor()" contenteditable><p>Write here stuff</p></div>
+      </div>
     </div>
-  </div>
-  <div class="footer">
-    <button onclick="saveFile()">
-      Save
-    </button>
-    <button onclick="openFile()">
-      Open
-    </button>
-  </div>
-</body>
+    <div class="footer">
+      <button onclick="saveFile()">
+        Save
+      </button>
+      <button onclick="openFile()">
+        Open
+      </button>
+    </div>
+  </body>
 </html>

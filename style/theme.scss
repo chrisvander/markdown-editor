@@ -3,8 +3,19 @@
 */
 
 // COLORS
+// desert-theme
 $text-color: #50514F;
 $background-color: #FAF3DD;
+// deep-sea-theme
+$text-color: #CDDFD1;
+$background-color: #222E50;
+// modern-dark-theme
+$text-color: #FFFFFF;
+$background-color: #273239;
+// modern-bright-theme
+// $text-color: #0C1713;
+// $background-color: #EAF4F4;
+
 
 // HEADER (blend options)
 $header-color: $background-color;
@@ -15,5 +26,5 @@ $header-text-color: $text-color;
 // $header-text-color: black;
 
 // FONTS
-$header-font: 'Arial';
-$body-font: 'Arial';
+$header-font: 'Helvetica';
+$body-font: 'Helvetica';

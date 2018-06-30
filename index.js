@@ -1,11 +1,42 @@
 require('electron-titlebar')
-const electron = require('electron')
+const {app,BrowserWindow,ipcRenderer} = require('electron')
 const {dialog} = require('electron').remote;
 const fs = require('fs');
 
-if (process.platform === 'darwin') {
-  document.getElementById('')
+window.onload = () => {
+  initEditor();
 }
+
+// MARKDOWN REGEX
+
+function manageClass(regex, cl, element) {
+  if (element.innerHTML.search(regex) != -1) element.classList.add(cl);
+  else if (element.classList.contains(cl)) element.classList.remove(cl);
+}
+
+function markdownEngine(editor) {
+  editor.querySelectorAll("p").forEach((p) => {
+    manageClass(/^#[^#].+/g, "h1", p);
+    manageClass(/^##[^#].+/g, "h2", p);
+    manageClass(/^###[^#].+/g, "h3", p);
+    manageClass(/^####[^#].+/g, "h4", p);
+    // if (p.innerHTML.search(/^#[^#].+/g) != -1) p.classList.add("h1");
+    // else if (p.classList.contains("h1")) p.classList.remove("h1");
+  });
+}
+
+function initEditor() {
+  let editor = document.getElementById('editor');
+  editor.addEventListener('input', function(ev) {
+    if (ev.keyCode == '13') {
+      document.execCommand('formatBlock', false, 'p');
+      return false;
+    }
+    markdownEngine(editor);
+  }, false);
+}
+
+// FILE MANAGEMENT
 
 var current_file = "";
 function saveFile() {
@@ -13,14 +44,22 @@ let writable_content = document.getElementById('editor').innerHTML
     .replace(/&amp;/g, '&')
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"');
+    .replace(/&quot;/g, '"')
+    .replace(/<br>/g, '\u000a')
+    .replace(/<\/p>/g, '\u000a')
+    .replace(/<p .+>/g, '')
+    .replace(/&nbsp;/g, '\u0020');
   if (current_file === "") {
-    dialog.showSaveDialog((fileName) => {
+    dialog.showSaveDialog({
+      filters: [
+        {name: 'Markdown', extensions: ['md']},
+        {name: 'Text', extensions: ['txt']},
+        {name: 'All Files', extensions: ['*']}
+      ]
+    }, (fileName) => {
       if (fileName === undefined){
           return;
       }
-
-
 
       // fileName is a string that contains the path and filename created in the save file dialog.
       fs.writeFile(fileName, writable_content, (err) => {
@@ -30,14 +69,16 @@ let writable_content = document.getElementById('editor').innerHTML
           document.getElementsByTagName('title')[0].innerHTML = fileName;
           document.getElementById('title').innerHTML = fileName;
           current_file = fileName;
+
+          app.addRecentDocument(fileName);
       });
     });
   }
   else {
     fs.writeFile(current_file, writable_content, (err) => {
-        if (err) {
-            alert("An error occurred saving the file "+ err.message)
-        }
+      if (err) {
+        alert("An error occurred saving the file "+ err.message)
+      }
     });
   }
 }
@@ -52,14 +93,18 @@ function openFile() {
 
       fs.readFile(filePath, 'utf-8', (err, data) => {
         if (err) alert('Error reading the file: ' + err);
-        document.getElementById('editor').innerHTML = data
+        document.getElementById('editor').innerHTML = "<p>" + data
           .replace(/&/g, '&amp;')
           .replace(/</g, '&lt;')
           .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;');
+          .replace(/"/g, '&quot;')
+          .replace(/\u000a/g, '<p>')
+          .replace(/\u0020/g, '&nbsp;');
       });
       document.getElementsByTagName('title')[0].innerHTML = filePath;
       document.getElementById('title').innerHTML = filePath;
       current_file = filePath;
+
+      app.addRecentDocument(filePath);
     });
 }
