@@ -13,26 +13,61 @@ function manageClass(regex, cl, element) {
   if (element.innerHTML.search(regex) != -1) element.classList.add(cl);
   else if (element.classList.contains(cl)) element.classList.remove(cl);
 }
+function applySelectionFunc(pnode, regex, command) {
+  let node = pnode.firstChild;
+  console.log(node);
+  let text = pnode.innerHTML;
+  console.log(text);
+  console.log(regex);
+  let match;
+  while (match = regex.exec(text)) {
+    console.log(match);
 
-function markdownEngine(editor) {
+    if (match == null) return;
+
+    let start = (regex.lastIndex - match[0].length + 2);
+    let end = (regex.lastIndex - 2);
+
+    let range = document.createRange();
+    let sel = window.getSelection();
+    let original = sel.getRangeAt(0);
+
+    range.setStart(node, start);
+    range.setEnd(pnode.lastChild, end);
+    sel.removeAllRanges();
+    sel.addRange(range);
+    document.execCommand(command,false,false);
+    sel.removeAllRanges();
+    sel.addRange(original);
+  }
+}
+
+function markdownEngine(editor, opts) {
   editor.querySelectorAll("p").forEach((p) => {
     manageClass(/^#[^#].+/g, "h1", p);
     manageClass(/^##[^#].+/g, "h2", p);
     manageClass(/^###[^#].+/g, "h3", p);
     manageClass(/^####[^#].+/g, "h4", p);
-    // if (p.innerHTML.search(/^#[^#].+/g) != -1) p.classList.add("h1");
-    // else if (p.classList.contains("h1")) p.classList.remove("h1");
+    manageClass(/^#####[^#].+/g, "h5", p);
+    manageClass(/^######[^#].+/g, "h6", p);
+    applySelectionFunc(p,/\*\*[^<].+[^>]\*\*/g, 'bold');
+    // if (p.innerHTML.search(/\*\*/g) != -1) document.execCommand('bold', false, false );
   });
 }
 
 function initEditor() {
   let editor = document.getElementById('editor');
+  markdownEngine(editor);
   editor.addEventListener('input', function(ev) {
+    let keys = [];
     if (ev.keyCode == '13') {
       document.execCommand('formatBlock', false, 'p');
       return false;
     }
-    markdownEngine(editor);
+    else if (ev.keyCode == '56') {
+
+    }
+    markdownEngine(editor, keys);
   }, false);
 }
 
@@ -85,26 +120,27 @@ let writable_content = document.getElementById('editor').innerHTML
 
 function openFile() {
   dialog.showOpenDialog((filePaths) => {
-      if (filePaths === undefined) {
-        return;
-      }
+    if (filePaths === undefined) {
+      return;
+    }
 
-      var filePath = filePaths[0];
+    var filePath = filePaths[0];
 
-      fs.readFile(filePath, 'utf-8', (err, data) => {
-        if (err) alert('Error reading the file: ' + err);
-        document.getElementById('editor').innerHTML = "<p>" + data
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/\u000a/g, '<p>')
-          .replace(/\u0020/g, '&nbsp;');
-      });
-      document.getElementsByTagName('title')[0].innerHTML = filePath;
-      document.getElementById('title').innerHTML = filePath;
-      current_file = filePath;
-
-      app.addRecentDocument(filePath);
+    fs.readFile(filePath, 'utf-8', (err, data) => {
+      if (err) alert('Error reading the file: ' + err);
+      document.getElementById('editor').innerHTML = "<p>" + data
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/\u000a/g, '<p>')
+        .replace(/\u0020/g, '&nbsp;');
+      initEditor();
     });
+    document.getElementsByTagName('title')[0].innerHTML = filePath;
+    document.getElementById('title').innerHTML = filePath;
+    current_file = filePath;
+
+    app.addRecentDocument(filePath);
+  });
 }
