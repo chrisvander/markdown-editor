@@ -13,12 +13,10 @@ function manageClass(regex, cl, element) {
   if (element.innerHTML.search(regex) != -1) element.classList.add(cl);
   else if (element.classList.contains(cl)) element.classList.remove(cl);
 }
+
 function applySelectionFunc(pnode, regex, command) {
   let node = pnode.firstChild;
-  console.log(node);
   let text = pnode.innerHTML;
-  console.log(text);
-  console.log(regex);
   let match;
   while (match = regex.exec(text)) {
     console.log(match);
@@ -44,13 +42,14 @@ function applySelectionFunc(pnode, regex, command) {
 
 function markdownEngine(editor, opts) {
   editor.querySelectorAll("p").forEach((p) => {
-    manageClass(/^#[^#].+/g, "h1", p);
-    manageClass(/^##[^#].+/g, "h2", p);
-    manageClass(/^###[^#].+/g, "h3", p);
-    manageClass(/^####[^#].+/g, "h4", p);
-    manageClass(/^#####[^#].+/g, "h5", p);
-    manageClass(/^######[^#].+/g, "h6", p);
-    applySelectionFunc(p,/\*\*[^<].+[^>]\*\*/g, 'bold');
+    manageClass(/^#[^#]+/g, "h1", p);
+    manageClass(/^##[^#]+/g, "h2", p);
+    manageClass(/^###[^#]+/g, "h3", p);
+    manageClass(/^####[^#]+/g, "h4", p);
+    manageClass(/^#####[^#]+/g, "h5", p);
+    manageClass(/^######[^#]+/g, "h6", p);
+    manageClass(/^[\+\-\*] /g, "ul", p);
+    // applySelectionFunc(p,/(?:^|[^>])\*\*[^<>].+[^<>]\*\*/g, "bold");
     // if (p.innerHTML.search(/\*\*/g) != -1) document.execCommand('bold', false, false );
   });
 }
