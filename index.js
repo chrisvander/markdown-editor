@@ -63,9 +63,6 @@ function initEditor() {
       document.execCommand('formatBlock', false, 'p');
       return false;
     }
-    else if (ev.keyCode == '56') {
-
-    }
     markdownEngine(editor, keys);
   }, false);
 }
