@@ -12,8 +12,8 @@
   "devDependencies": {
     "connect": "^3.6.6",
     "electron": "^2.0.2",
-    "electron-prebuilt-compile": "^2.0.3",
-    "electron-packager": "^1.0.0"
+    "electron-packager": "^12.1.0",
+    "electron-prebuilt-compile": "^2.0.3"
   },
   "dependencies": {
     "electron-titlebar": "0.0.3"
