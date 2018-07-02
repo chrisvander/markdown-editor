@@ -1,6 +1,6 @@
-import {enableLiveReload} from 'electron-compile';
-
-enableLiveReload();
+// import {enableLiveReload} from 'electron-compile';
+//
+// enableLiveReload();
 
 const {app, BrowserWindow, Menu} = require('electron')
 
