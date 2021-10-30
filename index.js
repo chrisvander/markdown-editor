@@ -48,7 +48,8 @@ function markdownEngine(editor, opts) {
     manageClass(/^####[^#]+/g, "h4", p);
     manageClass(/^#####[^#]+/g, "h5", p);
     manageClass(/^######[^#]+/g, "h6", p);
-    manageClass(/^[\+\-\*] /g, "ul", p);
+    manageClass(/^[\+] /g, "ul-plus", p);
+    manageClass(/^[\-\*] /g, "ul", p);
     // applySelectionFunc(p,/(?:^|[^>])\*\*[^<>].+[^<>]\*\*/g, "bold");
     // if (p.innerHTML.search(/\*\*/g) != -1) document.execCommand('bold', false, false );
   });
@@ -70,7 +71,7 @@ function initEditor() {
 // FILE MANAGEMENT
 
 var current_file = "";
-function saveFile() {
+function saveFile(saveAs = false) {
 let writable_content = document.getElementById('editor').innerHTML
     .replace(/&amp;/g, '&')
     .replace(/&lt;/g, '<')
@@ -78,9 +79,9 @@ let writable_content = document.getElementById('editor').innerHTML
     .replace(/&quot;/g, '"')
     .replace(/<br>/g, '\u000a')
     .replace(/<\/p>/g, '\u000a')
-    .replace(/<p .+>/g, '')
+    .replace(/<p.*>/g, '')
     .replace(/&nbsp;/g, '\u0020');
-  if (current_file === "") {
+  if (current_file === "" || saveAs) {
     dialog.showSaveDialog({
       filters: [
         {name: 'Markdown', extensions: ['md']},
@@ -130,7 +131,7 @@ function openFile() {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/\u000a/g, '<p>')
-        .replace(/\u0020/g, '&nbsp;');
+        .replace(/\u0020/g, ' ');
       initEditor();
     });
     document.getElementsByTagName('title')[0].innerHTML = filePath;
